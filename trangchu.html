@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SunwinStore.net</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+  <!-- STICKY HEADER + MARQUEE -->
+  <div class="top-sticky">
+    <header>
+      <div class="logo">SunwinStore</div>
+      <nav>
+        <a href="#">Trang chủ</a>
+        <a href="#">Nạp tiền</a>
+        <a href="#">Hướng dẫn</a>
+        <a href="#">Liên hệ</a>
+<div id="userArea" style="display:none; cursor:pointer;" onclick="openUserMenu()">
+  <span id="userAvatar" style="font-size:20px;">👤</span>
+  <span id="userBadge" style="background:#f39c12; color:#fff; padding:2px 6px; border-radius:4px; margin-left:5px; font-size:12px; vertical-align:middle;">Hạng Đồng</span>
+  <button id="logoutBtn" onclick="logout()" style="margin-left:10px; padding:2px 6px; font-size:12px; cursor:pointer;">Đăng xuất</button>
+</div>
+<a href="#" id="authLink" onclick="openAuthModal()">Đăng nhập / Đăng ký</a>
+  </nav>
+</header>
+
+<script>
+  // Khi đăng nhập thành công, gọi hàm này để cập nhật UI
+  function updateUserUI(username) {
+    document.getElementById('authLink').style.display = 'none';
+    document.getElementById('userArea').style.display = 'inline-block';
+    document.getElementById('logoutBtn').style.display = 'inline-block';
+    document.getElementById('userAvatar').textContent = '👤'; // luôn hiển thị icon người que
+    // Ví dụ cấp bậc dựa trên username (bạn có thể thay bằng logic thật)
+    let rank = 'Hạng Đồng';
+    if (username.toLowerCase() === 'admin') rank = 'Hạng Vàng';
+    document.getElementById('userBadge').textContent = rank;
+  }
+
+  // Khi đăng xuất, ẩn nút đăng xuất và khu vực user, hiện lại nút đăng nhập/đăng ký
+  function resetUI() {
+    document.getElementById('authLink').style.display = 'inline-block';
+    document.getElementById('userArea').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'none';
+  }
+
+  // Hàm đăng xuất
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    resetUI();
+  }
+
+  // Khi đăng xuất, ẩn nút đăng xuất và khu vực user, hiện lại nút đăng nhập/đăng ký
+  function resetUI() {
+    document.getElementById('authLink').style.display = 'inline-block';
+    document.getElementById('userArea').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'none';
+  }
+
+  // Hàm mở menu người dùng (bạn có thể thêm menu dropdown)
+  function openUserMenu() {
+    alert('Menu người dùng (chưa triển khai)');
+  }
+
+  // Kiểm tra token đăng nhập khi load trang
+  window.onload = function() {
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+    if (token && username) {
+      updateUserUI(username);
+    } else {
+      resetUI(); // Ẩn avatar, nút đăng xuất, hiện nút đăng nhập/đăng ký khi chưa đăng nhập
+    }
+  };
+
+  // Cập nhật localStorage khi đăng nhập thành công
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', username);
+        closeAuthModal();
+        updateUserUI(username);
+        window.location.href = 'trangchu.html';
+      } else {
+        alert(data.message || "Đăng nhập thất bại!");
+      }
+    } catch (error) {
+      alert("Lỗi kết nối đến server!");
+    }
+  });
+</script>
+    <div class="marquee-box">
+      <marquee behavior="scroll" direction="left" scrollamount="5">
+        Trần Khánh vừa mua thẻ nạp Steam Wallet #62186 Giá 390,000đ |
+        Hoàng Tú vừa mua thẻ nạp Steam Wallet #36902 Giá 160,000đ |
+        Thái Thanh vừa mua thẻ nạp Steam Wallet #80023 Giá 500,000đ |
+        Minh Quân vừa mua Acc Liên Minh #99876 Giá 120,000đ |
+        Phương Nam vừa mua Gift Card #55555 Giá 250,000đ |
+        Hải Yến vừa mua Code Blox Fruit #11111 Giá 75,000đ |
+        Nhật Anh vừa mua Acc Roblox #96325 Giá 210,000đ
+      </marquee>
+    </div>
+  </div>
+
+  <!-- BANNER TRUNG TÂM -->
+  <section class="banner">
+    <h1>Mua mã code, tài khoản game uy tín</h1>
+    <p>Nhanh chóng - Bảo mật - Tự động 24/7</p>
+  </section>
+
+  <!-- SECTIONS NAV -->
+  <div class="sections-bar">
+    <a href="#">Sản phẩm vừa xem</a>
+    <a href="#">Sản phẩm mua nhiều</a>
+    <a href="#">Sản phẩm khuyến mãi</a>
+    <a href="#">Minigame</a>
+    <a href="#" id="cartLink" onclick="handleCartClick()">🛒 Giỏ hàng</a>
+  </div>
+  <script>
+    function handleCartClick() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Xin vui lòng đăng nhập / đăng ký tài khoản để sử dụng dịch vụ giỏ hàng.');
+      } else {
+        alert('Chức năng giỏ hàng đang được phát triển.');
+      }
+    }
+  </script>
+
+  <!-- KHỐI DANH MỤC + TÌM KIẾM -->
+  <div class="container category-search-wrapper">
+    <div class="category-search-left">
+      <div class="dropdown-category">
+        <span class="category-icon"><i class="fa fa-bars"></i></span>
+        <span class="category-title">Danh mục sản phẩm</span>
+        <select id="category-select" name="category">
+          <option value="">-- Chọn danh mục --</option>
+          <option value="keygame">Key game</option>
+          <option value="steam">Steam game</option>
+          <option value="giftcard">Gift card</option>
+          <option value="psn">Playstation PSN</option>
+          <option value="lienminh">Acc Liên Minh</option>
+          <option value="roblox">Roblox</option>
+          <option value="bloxfruit">Blox Fruit</option>
+        </select>
+      </div>
+    </div>
+    <div class="category-search-center">
+      <div class="search-bar">
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+        <button type="submit"><i class="fa fa-search"></i></button>
+      </div>
+    </div>
+    <div class="category-search-right"></div>
+  </div>
+
+  <!-- SLIDER QUẢNG CÁO -->
+  <div class="slider-container">
+    <div class="slider-wrapper">
+      <div class="slider-item active">
+        <img src="assets/img/banner1.png" alt="Slide 1">
+      </div>
+      <div class="slider-item">
+        <img src="assets/img/image-icon.jpg" alt="Slide 2">
+      </div>
+      <div class="slider-item">
+        <img src="assets/img/image-icon.jpg" alt="Slide 3">
+      </div>
+      <button class="slider-btn prev" onclick="moveSlide(-1)">&#10094;</button>
+      <button class="slider-btn next" onclick="moveSlide(1)">&#10095;</button>
+    </div>
+    <div class="slider-dots" id="sliderDots"></div>
+  </div>
+
+  <!-- PHẦN TỪ KHÓA NỔI BẬT + MÔ TẢ NGẮN -->
+  <section class="highlight-keywords container">
+  <div class="section-title-line">
+  <div class="section-title-line-fill"></div>
+  <h2 class="product-section-title">Từ khóa nổi bật</h2>
+  <div class="section-title-line-fill"></div>
+  
+</div>
+
+  <p class="keyword-subtitle">Danh sách những từ khóa đang thịnh hành và được ưa chuộng nhất hiện nay</p>
+  <div class="keyword-tags">
+    <a href="#" class="kw-blue">Làm việc</a>
+    <a href="#" class="kw-cyan">Giải trí</a>
+    <a href="#" class="kw-orange">Học tập</a>
+    <a href="#" class="kw-purple">AI</a>
+    <a href="#" class="kw-dark">Wallet</a>
+    <a href="#" class="kw-red">Youtube</a>
+  </div>
+</section>
+
+  <!-- DANH SÁCH SẢN PHẨM -->
+<section class="product-section container">
+  <div class="section-header">
+  <div class="section-title-line">
+    <div class="section-title-line-fill left"></div>
+    <h2 class="product-section-title">Sản phẩm nổi bật</h2>
+    <div class="section-title-line-fill"></div>
+  </div>
+  <a href="#" class="btn-more">Xem thêm</a>
+</div>
+  <div class="product-grid">
+    <!-- Một sản phẩm -->
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-55%</span>
+        <img src="assets/img/image-icon.jpg" alt="Key Game">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Key Game GTA V Premium</h3>
+        <p class="product-price">
+          <span class="original-price">450.000đ</span>
+          <span class="sale-price">199.000đ</span>
+        </p>
+      </div>
+    </div>
+    <!-- Nhân bản thêm sản phẩm -->
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-30%</span>
+        <img src="assets/img/banner1.png" alt="Steam Wallet">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Steam Wallet 100K</h3>
+        <p class="product-price">
+          <span class="original-price">100.000đ</span>
+          <span class="sale-price">70.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-40%</span>
+        <img src="assets/img/image-icon.jpg" alt="Gift Card">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Gift Card Google Play</h3>
+        <p class="product-price">
+          <span class="original-price">500.000đ</span>
+          <span class="sale-price">299.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+      </div>
+
+      <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <!-- ...có thể copy thêm nhiều sản phẩm nữa nếu muốn... -->
+  </div>
+</section>
+
+<section class="product-section container">
+  <div class="section-header">
+  <div class="section-title-line">
+    <div class="section-title-line-fill left"></div>
+    <h2 class="product-section-title">Sản phẩm mới</h2>
+    <div class="section-title-line-fill"></div>
+  </div>
+  <a href="#" class="btn-more">Xem thêm</a>
+</div>
+  <div class="product-grid">
+    <!-- Một sản phẩm -->
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-55%</span>
+        <img src="assets/img/image-icon.jpg" alt="Key Game">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Key Game GTA V Premium</h3>
+        <p class="product-price">
+          <span class="original-price">450.000đ</span>
+          <span class="sale-price">199.000đ</span>
+        </p>
+      </div>
+    </div>
+    <!-- Nhân bản thêm sản phẩm -->
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-30%</span>
+        <img src="assets/img/banner1.png" alt="Steam Wallet">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Steam Wallet 100K</h3>
+        <p class="product-price">
+          <span class="original-price">100.000đ</span>
+          <span class="sale-price">70.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-40%</span>
+        <img src="assets/img/image-icon.jpg" alt="Gift Card">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Gift Card Google Play</h3>
+        <p class="class="product-price">
+          <span class="original-price">500.000đ</span>
+          <span class="sale-price">299.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+      </div>
+
+      <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <!-- ...có thể copy thêm nhiều sản phẩm nữa nếu muốn... -->
+  </div>
+</section>
+
+<section class="product-section container">
+  <div class="section-header">
+  <div class="section-title-line">
+    <div class="section-title-line-fill left"></div>
+    <h2 class="product-section-title">Game Steam</h2>
+    <div class="section-title-line-fill"></div>
+  </div>
+  <a href="#" class="btn-more">Xem thêm</a>
+</div>
+  <div class="product-grid">
+    <!-- Một sản phẩm -->
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-55%</span>
+        <img src="assets/img/image-icon.jpg" alt="Key Game">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Key Game GTA V Premium</h3>
+        <p class="product-price">
+          <span class="original-price">450.000đ</span>
+          <span class="sale-price">199.000đ</span>
+        </p>
+      </div>
+    </div>
+    <!-- Nhân bản thêm sản phẩm -->
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-30%</span>
+        <img src="assets/img/banner1.png" alt="Steam Wallet">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Steam Wallet 100K</h3>
+        <p class="product-price">
+          <span class="original-price">100.000đ</span>
+          <span class="sale-price">70.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-40%</span>
+        <img src="assets/img/image-icon.jpg" alt="Gift Card">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Gift Card Google Play</h3>
+        <p class="class="product-price">
+          <span class="original-price">500.000đ</span>
+          <span class="sale-price">299.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+      </div>
+
+      <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <!-- ...có thể copy thêm nhiều sản phẩm nữa nếu muốn... -->
+  </div>
+</section>
+<section class="product-section container">
+  <div class="section-header">
+  <div class="section-title-line">
+    <div class="section-title-line-fill left"></div>
+    <h2 class="product-section-title">Steam wallet</h2>
+    <div class="section-title-line-fill"></div>
+  </div>
+  <a href="#" class="btn-more">Xem thêm</a>
+</div>
+  <div class="product-grid">
+    <!-- Một sản phẩm -->
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-55%</span>
+        <img src="assets/img/image-icon.jpg" alt="Key Game">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Key Game GTA V Premium</h3>
+        <p class="product-price">
+          <span class="original-price">450.000đ</span>
+          <span class="sale-price">199.000đ</span>
+        </p>
+      </div>
+    </div>
+    <!-- Nhân bản thêm sản phẩm -->
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-30%</span>
+        <img src="assets/img/banner1.png" alt="Steam Wallet">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Steam Wallet 100K</h3>
+        <p class="product-price">
+          <span class="original-price">100.000đ</span>
+          <span class="sale-price">70.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-40%</span>
+        <img src="assets/img/image-icon.jpg" alt="Gift Card">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Gift Card Google Play</h3>
+        <p class="class="product-price">
+          <span class="original-price">500.000đ</span>
+          <span class="sale-price">299.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+      </div>
+
+      <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img-wrapper">
+        <span class="product-discount">-20%</span>
+        <img src="assets/img/image-icon.jpg" alt="Acc Liên Minh">
+        <div class="product-hover">
+          <button class="buy-btn">Mua ngay</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">Acc Liên Minh VIP</h3>
+        <p class="product-price">
+          <span class="original-price">1.000.000đ</span>
+          <span class="sale-price">799.000đ</span>
+        </p>
+      </div>
+    </div>
+    <!-- ...có thể copy thêm nhiều sản phẩm nữa nếu muốn... -->
+  </div>
+</section>
+
+<!-- PHẦN BẠN ĐÃ CÓ TÀI KHOẢN CHƯA -->
+<section class="account-prompt">
+  <div class="account-prompt-wrapper">
+    <div class="account-prompt-image">
+      <img src="assets/svg/dont-have-account.svg" alt="Minh họa tài khoản">
+    </div>
+    <div class="account-prompt-content">
+      <h2>Bạn chưa có tài khoản?</h2>
+      <p>Hãy tạo ngay một tài khoản để sử dụng đầy đủ các tính năng, tích lũy ưu đãi khi thanh toán các sản phẩm và tham gia vào chương trình Giới thiệu bạn bè nhận hoa hồng vĩnh viễn tại Divine Shop.</p>
+      <a href="#" class="btn-register">Đăng ký ngay</a>
+      <a href="#" class="btn-login">Đăng nhập</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- Hiển thị số dư tài khoản người dùng -->
+<div id="userBalanceContainer" style="position: absolute; top: 12px; left: 50%; transform: translateX(-50%); color: white; font-size: 20px; font-weight: bold; font-family: Arial, sans-serif; background: #222; padding: 5px 15px; border-radius: 25px; box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1000;">
+  <span style="font-size: 22px; margin-right: 8px;">$</span><span id="userBalance">0</span>
+  <button style="margin-left: 10px; background: #f39c12; border: none; border-radius: 50%; width: 28px; height: 28px; color: white; font-weight: bold; cursor: pointer;" onclick="alert('Chức năng nạp tiền đang phát triển')">+</button>
+</div>
+
+<!-- Phần giới thiệu -->
+<section class="highlight-box">
+  <div class="highlight-content" id="highlightContent">
+    <p class="highlight-text">
+      Game Offline, Game Online dành cho PC là một bộ môn thể thao điện tử có sức hút vô cùng mãnh liệt đối với tất cả các Gamer. Vì rất nhiều lý do như: Game đồ họa cao, nhân vật game đẹp, mô phỏng tinh tiết và kịch bản của game vô cùng chân thật.
+    </p>
+    <p class="highlight-text hidden-text">
+      Liên tục các hội nhóm Game Offline, game Online và các Web tải game được lập ra nhằm hỗ trợ cũng cấp link tải Game, giải đáp thắc mắc khi gặp lỗi, cùng kết nối thành đội nhóm giao lưu và chơi game một cách lành mạnh.
+    </p>
+    <p class="highlight-text hidden-text">
+      Website và nhóm hỗ trợ cài đặt Game Daominhha.net là một trong những website lớn nhất về Game Offline, Game Việt Hóa. Được tạo ra nhằm cung cấp những game hay dành cho PC từ cấu hình nhẹ đến cấu hình cao cấp.
+    </p>
+  </div>
+  <div class="highlight-footer">
+    <button class="toggle-button" id="toggleButton">XEM THÊM</button>
+    <div class="footer-line"></div>
+  </div>
+</section>
+
+  <!-- Hình thức thanh toán -->
+  <section class="footer-pay-social">
+    <div class="container">
+      <div class="footer-pay-social-inner">
+        <div class="payment-methods">
+          <a href="#" class="payment-methods-link">
+            <div class="payment-methods-content">
+              <img src="assets/svg/momo.svg" alt="Momo">
+              <img src="assets/svg/vn-pay.svg" alt="VNPay">
+              <img src="assets/svg/visa.svg" alt="Visa">
+              <img src="assets/svg/master-card.svg" alt="Mastercard">
+              <span class="payment-methods-text">và nhiều hình thức thanh toán</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="footer-social-row">
+        <div class="social-links">
+          <div class="social-links-content">
+            <a href="#" class="social-link">
+              <img src="assets/svg/facebook.svg" alt="Facebook">
+            </a>
+            <a href="#" class="social-link">
+              <img src="assets/svg/youtube.svg" alt="YouTube">
+            </a>
+            <a href="#" class="social-link">
+              <img src="assets/svg/instagram.svg" alt="Instagram">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Footer giới thiệu -->
+<section class="footer-intro">
+  <div class="footer-intro-content">
+    <div>
+      <h3>GIỚI THIỆU</h3>
+      <ul>
+        <li><a href="#">Game bản quyền là gì?</a></li>
+        <li><a href="#">Giới thiệu Divine Shop</a></li>
+        <li><a href="#">Điều khoản dịch vụ</a></li>
+        <li><a href="#">Chính sách bảo mật</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>TÀI KHOẢN</h3>
+      <ul>
+        <li><a href="#">Đăng nhập</a></li>
+        <li><a href="#">Đăng ký</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>LIÊN HỆ</h3>
+      <ul>
+        <li>Hotline tự động: <a href="tel:1900633305">1900 633 305</a></li>
+        <li><a href="#">Liên hệ Hỗ trợ</a></li>
+        <li><a href="#">Chat với CSKH</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+  </footer>
+
+  <!-- STICKY BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div>
+      <img src="assets/img/home_icon.png" alt="Home" width="24"><br>HOME
+    </div>
+    <div>
+      <img src="assets/img/zalo.png" alt="Zalo" width="24"><br>CHAT ZALO
+    </div>
+    <div>
+      <img src="assets/img/mess.png" alt="Messenger" width="24"><br>MESSENGER
+    </div>
+    <div>
+      <img src="assets/img/call.png" alt="Phone" width="24"><br>GỌI ĐIỆN
+    </div>
+  </div>
+
+  
+
+  <script src="assets/js/slider.js"></script>
+  <script src="assets/js/thugon.js"></script>
+</body>
+<!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
+<div class="auth-modal" id="authModal">
+  <div class="auth-box">
+    <div class="auth-tabs">
+      <button class="tab-btn active" onclick="showTab('login')">Đăng nhập</button>
+      <button class="tab-btn" onclick="showTab('register')">Đăng ký</button>
+      <span class="auth-close" onclick="closeAuthModal()">×</span>
+    </div>
+
+    <!-- Form đăng nhập -->
+    <form id="loginForm" class="auth-form active" autocomplete="off">
+      <div class="form-group">
+        <label for="login-username">Tên đăng nhập</label>
+        <input id="login-username" type="text" placeholder="Nhập tên đăng nhập" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="login-password">Mật khẩu</label>
+        <div class="input-password-wrapper">
+          <input id="login-password" type="password" placeholder="Nhập mật khẩu" required autocomplete="current-password">
+          <span class="toggle-password" onclick="togglePassword(this)"><i class="fa fa-eye"></i></span>
+        </div>
+      </div>
+      <button type="submit">Đăng nhập</button>
+    </form>
+
+    <!-- Form đăng ký -->
+    <form id="registerForm" class="auth-form" autocomplete="off">
+      <div class="form-group">
+        <label for="register-username">Tên người dùng</label>
+        <input id="register-username" type="text" placeholder="Nhập tên người dùng" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="register-email">Email</label>
+        <input id="register-email" type="email" placeholder="Nhập email" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="register-password">Mật khẩu</label>
+        <div class="input-password-wrapper">
+          <input id="register-password" type="password" placeholder="Nhập mật khẩu" required autocomplete="new-password">
+          <span class="toggle-password" onclick="togglePassword(this)"><i class="fa fa-eye"></i></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="register-password2">Nhập lại mật khẩu</label>
+        <div class="input-password-wrapper">
+          <input id="register-password2" type="password" placeholder="Nhập lại mật khẩu" required autocomplete="new-password">
+          <span class="toggle-password" onclick="togglePassword(this)"><i class="fa fa-eye"></i></span>
+        </div>
+      </div>
+      <button type="submit">Đăng ký</button>
+    </form>
+  </div>
+</div>
+<script src="assets/js/auth.js"></script>
+
+</html>
