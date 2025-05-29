@@ -36,7 +36,6 @@ function closeAuthModal() {
   });
 }
 
-// Gắn sự kiện click vào nút “Đăng nhập / Đăng ký”
 document.addEventListener('DOMContentLoaded', () => {
   const authBtn = document.querySelector('a[href="#"][onclick]');
   if (!authBtn) {
@@ -49,6 +48,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     });
+  }
+});
+
+// Cập nhật avatar user trên trang chủ khi đăng nhập
+function updateUserAvatar(username) {
+  fetch(`http://localhost:3000/userinfo/${username}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.avatarUrl) {
+        const userAvatar = document.getElementById('userAvatar');
+        if (userAvatar) {
+          userAvatar.src = data.avatarUrl;
+          userAvatar.style.width = '20px';
+          userAvatar.style.height = '20px';
+          userAvatar.style.borderRadius = '50%';
+          userAvatar.style.verticalAlign = 'middle';
+          userAvatar.style.marginRight = '5px';
+        }
+      }
+    })
+    .catch(err => {
+      console.error('Lỗi khi lấy avatar người dùng:', err);
+    });
+}
+
+// Gọi updateUserAvatar khi load trang nếu đã đăng nhập
+window.addEventListener('load', () => {
+  const username = localStorage.getItem('username');
+  if (username) {
+    updateUserAvatar(username);
   }
 });
 
@@ -81,7 +110,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     if (response.ok) {
       localStorage.setItem('token', data.token); // Lưu token
+      localStorage.setItem('username', username);
       closeAuthModal();
+      document.body.classList.add('logged-in'); // Thêm class để hiện số dư
       // Lấy số dư tài khoản và hiển thị
       const balanceResponse = await fetch(`http://localhost:3000/balance/${username}`);
       if (balanceResponse.ok) {

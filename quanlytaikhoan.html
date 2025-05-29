@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quản lý tài khoản - SunwinStore</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/auth.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+<body>
+  <!-- STICKY HEADER + MARQUEE (giữ nguyên giống trangchu.html) -->
+  <div class="top-sticky">
+    <header>
+      <div class="logo">SunwinStore</div>
+      <nav>
+        <a href="trangchu.html">Trang chủ</a>
+        <a href="#">Nạp tiền</a>
+        <a href="#">Hướng dẫn</a>
+        <a href="#">Liên hệ</a>
+        <div id="userArea" style="display:none; position: relative; cursor:pointer;">
+          <img id="userAvatar" src="assets/svg/default-profile.svg" alt="Avatar" style="width:32px; height:32px; border-radius:50%; vertical-align:middle;" />
+          <span id="userBadge" style="background:#f39c12; color:#fff; padding:2px 6px; border-radius:4px; margin-left:5px; font-size:12px; vertical-align:middle;">Hạng Đồng</span>
+          <div id="userDropdown" style="display:none; position: absolute; top: 30px; left: 0; background: white; color: black; border: 1px solid #ccc; border-radius: 5px; width: 180px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 1000;">
+            <div style="padding: 10px; border-bottom: 1px solid #eee;">
+              <strong>Số dư tài khoản</strong><br/>
+              <span id="userBalanceDropdown">0đ</span>
+              <button style="float: right; background: #f39c12; border: none; border-radius: 50%; width: 24px; height: 24px; color: white; font-weight: bold; cursor: pointer;" onclick="alert('Chức năng nạp tiền đang phát triển')">+</button>
+            </div>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li><a href="quanlytaikhoan.html" style="display: block; padding: 8px 10px; color: black; text-decoration: none;">Quản lý tài khoản</a></li>
+              <li><a href="#" style="display: block; padding: 8px 10px; color: black; text-decoration: none;" onclick="alert('Chức năng lịch sử đơn hàng đang phát triển')">Lịch sử đơn hàng</a></li>
+              <li><a href="#" style="display: block; padding: 8px 10px; color: black; text-decoration: none;" onclick="alert('Chức năng sản phẩm yêu thích đang phát triển')">Sản phẩm yêu thích</a></li>
+              <li><a href="#" style="display: block; padding: 8px 10px; color: black; text-decoration: none;" onclick="logout()">Đăng xuất</a></li>
+            </ul>
+          </div>
+        </div>
+        <a href="#" id="authLink" onclick="openAuthModal()">Đăng nhập / Đăng ký</a>
+      </nav>
+    </header>
+    <div class="marquee-box">
+      <marquee behavior="scroll" direction="left" scrollamount="5">
+        Trần Khánh vừa mua thẻ nạp Steam Wallet #62186 Giá 390,000đ |
+        Hoàng Tú vừa mua thẻ nạp Steam Wallet #36902 Giá 160,000đ |
+        Thái Thanh vừa mua thẻ nạp Steam Wallet #80023 Giá 500,000đ |
+        Minh Quân vừa mua Acc Liên Minh #99876 Giá 120,000đ |
+        Phương Nam vừa mua Gift Card #55555 Giá 250,000đ |
+        Hải Yến vừa mua Code Blox Fruit #11111 Giá 75,000đ |
+        Nhật Anh vừa mua Acc Roblox #96325 Giá 210,000đ
+      </marquee>
+    </div>
+  </div>
+
+  <!-- User Profile Section -->
+  <section class="container" style="max-width: 1100px; margin: 40px auto;">
+  <div style="display: flex; gap: 32px;">
+    <!-- Sidebar -->
+    <aside style="width: 230px; background: #fafbfc; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); padding: 24px 0 24px 0;">
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        <li style="margin-bottom: 12px;">
+          <a href="quanlytaikhoan.html" style="display: block; padding: 12px 32px; color: #007bff; font-weight: bold; background: #eaf3ff; border-radius: 6px; text-decoration: none;">Tài khoản</a>
+        </li>
+        <li style="margin-bottom: 12px;">
+          <a href="baomat.html" style="display: block; padding: 12px 32px; color: #222; text-decoration: none; border-radius: 6px;">Mật khẩu và bảo mật</a>
+        </li>
+        <li style="margin-bottom: 12px;">
+          <a href="#" style="display: block; padding: 12px 32px; color: #222; text-decoration: none; border-radius: 6px;">Lịch sử đơn hàng</a>
+        </li>
+        <li>
+          <a href="#" style="display: block; padding: 12px 32px; color: #222; text-decoration: none; border-radius: 6px;">Sản phẩm yêu thích</a>
+        </li>
+      </ul>
+    </aside>
+    <!-- Main content -->
+    <div style="flex: 1;">
+  <!-- Tiêu đề căn giữa -->
+  <h2 style="margin-bottom: 32px; text-align: center;">Quản lý tài khoản</h2>
+  <div style="display: flex; gap: 32px; align-items: flex-start;">
+    <!-- Avatar -->
+    <div style="flex: 0 0 180px; text-align: center;">
+      <img id="profileAvatar" src="assets/img/default-avatar.png" alt="Avatar" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #007bff;" />
+      <input type="file" id="avatarInput" accept="image/*" style="margin-top: 10px;" />
+      <p style="font-size: 12px; color: #666;">Vui lòng chọn ảnh nhỏ hơn 5MB</p>
+    </div>
+    <!-- Info + Form cập nhật -->
+    <div style="flex: 1;">
+      <div style="display: flex; align-items: flex-start;">
+        <div>
+          <p style="margin-bottom: 12px;"><strong>Tên đăng nhập:</strong> <span id="profileUsername"></span></p>
+          <p style="margin-bottom: 12px;"><strong>Email:</strong> <span id="profileEmail"></span></p>
+          <p style="margin-bottom: 12px;"><strong>Hạng:</strong> <span id="profileRank"></span></p>
+          <p style="margin-bottom: 12px;"><strong>Số dư tài khoản:</strong> <span id="profileBalance"></span></p>
+          <p style="margin-bottom: 12px;"><strong>Ngày đăng ký:</strong> <span id="profileRegistrationDate"></span></p>
+        </div>
+        <form id="updateInfoForm" style="display: flex; flex-direction: column; gap: 10px; min-width: 260px; margin-left: 68px;">
+          <div>
+            <label for="updateUsername" style="font-weight: bold;">Cập nhật tên đăng nhập:</label><br />
+            <input type="text" id="updateUsername" name="updateUsername" style="width: 100%;" required />
+          </div>
+          <div>
+            <label for="updateEmail" style="font-weight: bold;">Cập nhật email:</label><br />
+            <input type="email" id="updateEmail" name="updateEmail" style="width: 100%;" required />
+          </div>
+          <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Lưu thay đổi</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+            
+
+ <!-- Phần giới thiệu -->
+  <section class="highlight-box">
+    <div class="highlight-content" id="highlightContent">
+      <p class="highlight-text">
+        Game Offline, Game Online dành cho PC là một bộ môn thể thao điện tử có sức hút vô cùng mãnh liệt đối với tất cả các Gamer. Vì rất nhiều lý do như: Game đồ họa cao, nhân vật game đẹp, mô phỏng tinh tiết và kịch bản của game vô cùng chân thật.
+      </p>
+      <p class="highlight-text hidden-text">
+        Liên tục các hội nhóm Game Offline, game Online và các Web tải game được lập ra nhằm hỗ trợ cũng cấp link tải Game, giải đáp thắc mắc khi gặp lỗi, cùng kết nối thành đội nhóm giao lưu và chơi game một cách lành mạnh.
+      </p>
+      <p class="highlight-text hidden-text">
+        Website và nhóm hỗ trợ cài đặt Game Daominhha.net là một trong những website lớn nhất về Game Offline, Game Việt Hóa. Được tạo ra nhằm cung cấp những game hay dành cho PC từ cấu hình nhẹ đến cấu hình cao cấp.
+      </p>
+    </div>
+    <div class="highlight-footer">
+      <button class="toggle-button" id="toggleButton">XEM THÊM</button>
+      <div class="footer-line"></div>
+    </div>
+  </section>
+  
+  <!-- Hình thức thanh toán -->
+  <section class="footer-pay-social">
+    <div class="container">
+      <div class="footer-pay-social-inner">
+        <div class="payment-methods">
+          <a href="#" class="payment-methods-link">
+            <div class="payment-methods-content">
+              <img src="assets/svg/momo.svg" alt="Momo" />
+              <img src="assets/svg/vn-pay.svg" alt="VNPay" />
+              <img src="assets/svg/visa.svg" alt="Visa" />
+              <img src="assets/svg/master-card.svg" alt="Mastercard" />
+              <span class="payment-methods-text">và nhiều hình thức thanh toán</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="footer-social-row">
+        <div class="social-links">
+          <div class="social-links-content">
+            <a href="#" class="social-link">
+              <img src="assets/svg/facebook.svg" alt="Facebook" />
+            </a>
+            <a href="#" class="social-link">
+              <img src="assets/svg/youtube.svg" alt="YouTube" />
+            </a>
+            <a href="#" class="social-link">
+              <img src="assets/svg/instagram.svg" alt="Instagram" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- Footer giới thiệu -->
+<section class="footer-intro">
+  <div class="footer-intro-content">
+    <div>
+      <h3>GIỚI THIỆU</h3>
+      <ul>
+        <li><a href="#">Game bản quyền là gì?</a></li>
+        <li><a href="#">Giới thiệu Divine Shop</a></li>
+        <li><a href="#">Điều khoản dịch vụ</a></li>
+        <li><a href="#">Chính sách bảo mật</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>TÀI KHOẢN</h3>
+      <ul>
+        <li><a href="#">Đăng nhập</a></li>
+        <li><a href="#">Đăng ký</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>LIÊN HỆ</h3>
+      <ul>
+        <li>Hotline tự động: <a href="tel:1900633305">1900 633 305</a></li>
+        <li><a href="#">Liên hệ Hỗ trợ</a></li>
+        <li><a href="#">Chat với CSKH</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+  </footer>
+
+  <!-- STICKY BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div>
+      <img src="assets/img/home_icon.png" alt="Home" width="24"><br>HOME
+    </div>
+    <div>
+      <img src="assets/img/zalo.png" alt="Zalo" width="24"><br>CHAT ZALO
+    </div>
+    <div>
+      <img src="assets/img/mess.png" alt="Messenger" width="24"><br>MESSENGER
+    </div>
+    <div>
+      <img src="assets/img/call.png" alt="Phone" width="24"><br>GỌI ĐIỆN
+    </div>
+  </div>
+  <script src="assets/js/thugon.js"></script>
+  <script src="assets/js/userProfile.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    // Kiểm tra đăng nhập khi load trang
+    window.onload = function() {
+      const token = localStorage.getItem('token');
+      const username = localStorage.getItem('username');
+      if (token && username) {
+        document.getElementById('authLink').style.display = 'none';
+        document.getElementById('userArea').style.display = 'inline-block';
+        document.getElementById('userDropdown').style.display = 'none';
+      } else {
+        document.getElementById('authLink').style.display = 'inline-block';
+        document.getElementById('userArea').style.display = 'none';
+      }
+    };
+
+    // Hàm mở menu người dùng
+    function toggleUserMenu() {
+      const dropdown = document.getElementById('userDropdown');
+      if (dropdown.style.display === 'block') {
+        dropdown.style.display = 'none';
+      } else {
+        dropdown.style.display = 'block';
+      }
+    }
+
+    // Thêm sự kiện click cho userArea để mở dropdown
+    document.getElementById('userArea').addEventListener('click', toggleUserMenu);
+  </script>
+</body>
+</html>

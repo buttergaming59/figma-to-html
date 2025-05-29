@@ -1,6 +1,14 @@
-/* Style cho số dư tài khoản hiển thị ở header */
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: #fff; /* hoặc màu nền bạn muốn */
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}/* Style cho số dư tài khoản hiển thị ở header */
 #userBalanceContainer {
-  position: fixed;
+  position: absolute;
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
@@ -12,8 +20,48 @@
   padding: 5px 15px;
   border-radius: 25px;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  z-index: 1000;
-  display: none; /* Mặc định ẩn, sẽ hiện khi đăng nhập */
+  z-index: 1001; /* cao hơn header/marquee */
+  display: flex;
+  align-items: center;
+}
+
+/* Sticky Header + Marquee */
+.top-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+/* Fix dropdown user menu overflow on trangchu.html */
+#userArea {
+  position: relative;
+}
+
+#userDropdown {
+  max-width: 220px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  box-sizing: border-box;
+  right: 0;
+  left: auto !important;
+  z-index: 10000;
+}
+
+/* Optional: add a max height and scroll if content too long */
+#userDropdown ul {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Style for the currency icon in user balance container */
+#userBalanceContainer span:first-child {
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 22px;
+  margin-right: 8px;
+  vertical-align: middle;
 }
 
 header {

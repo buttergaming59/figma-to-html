@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mật khẩu & Bảo mật - SunwinStore</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/auth.css" />
+</head>
+<body>
+  <div class="top-sticky">
+    <!-- ...header và marquee như các trang khác... -->
+  </div>
+  <section class="container" style="max-width: 1100px; margin: 40px auto;">
+    <div style="display: flex; gap: 32px;">
+      <!-- Sidebar -->
+      <aside style="width: 230px; background: #fafbfc; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); padding: 24px 0 24px 0;">
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 12px;">
+            <a href="quanlytaikhoan.html" style="display: block; padding: 12px 32px; color: #222; text-decoration: none; border-radius: 6px;">Tài khoản</a>
+          </li>
+          <li style="margin-bottom: 12px;">
+            <a href="baomat.html" style="display: block; padding: 12px 32px; color: #007bff; font-weight: bold; background: #eaf3ff; border-radius: 6px; text-decoration: none;">Mật khẩu và bảo mật</a>
+          </li>
+          <li style="margin-bottom: 12px;">
+            <a href="#" style="display: block; padding: 12px 32px; color: #222; text-decoration: none; border-radius: 6px;">Lịch sử đơn hàng</a>
+          </li>
+          <li>
+            <a href="#" style="display: block; padding: 12px 32px; color: #222; text-decoration: none; border-radius: 6px;">Sản phẩm yêu thích</a>
+          </li>
+        </ul>
+      </aside>
+      <!-- Main content -->
+      <div style="flex: 1;">
+        <h2 style="margin-bottom: 24px;">Mật khẩu & Bảo mật</h2>
+        <form id="changePasswordForm" style="max-width: 400px;">
+          <div style="margin-bottom: 12px;">
+            <label for="currentPassword">Mật khẩu cũ</label>
+            <input type="password" id="currentPassword" name="currentPassword" required style="width: 100%;" />
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label for="newPassword">Mật khẩu mới</label>
+            <input type="password" id="newPassword" name="newPassword" required style="width: 100%;" />
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label for="confirmNewPassword">Nhập lại mật khẩu mới</label>
+            <input type="password" id="confirmNewPassword" name="confirmNewPassword" required style="width: 100%;" />
+          </div>
+          <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Đổi mật khẩu</button>
+        </form>
+        <div style="margin-top: 32px;">
+          <label>Bảo mật hai lớp (chỉ trang trí)</label>
+          <select disabled style="width: 100%; margin-bottom: 8px;">
+            <option>Không sử dụng OTP</option>
+            <option>OTP qua Email</option>
+            <option>OTP qua SMS</option>
+          </select>
+          <select disabled style="width: 100%;">
+            <option>Bảo mật bằng Email</option>
+            <option>Bảo mật bằng SMS</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="assets/js/userProfile.js"></script>
+</body>
+</html>

@@ -19,10 +19,22 @@
         <a href="#">Nạp tiền</a>
         <a href="#">Hướng dẫn</a>
         <a href="#">Liên hệ</a>
-<div id="userArea" style="display:none; cursor:pointer;" onclick="openUserMenu()">
-  <span id="userAvatar" style="font-size:20px;">👤</span>
+<div id="userArea" style="display:none; position: relative; cursor:pointer;">
+  <img id="userAvatar" src="assets/svg/default-profile.svg" alt="Avatar" style="width:20px; height:20px; border-radius:50%; vertical-align:middle; margin-right: 5px;" />
   <span id="userBadge" style="background:#f39c12; color:#fff; padding:2px 6px; border-radius:4px; margin-left:5px; font-size:12px; vertical-align:middle;">Hạng Đồng</span>
-  <button id="logoutBtn" onclick="logout()" style="margin-left:10px; padding:2px 6px; font-size:12px; cursor:pointer;">Đăng xuất</button>
+  <div id="userDropdown" style="display:none; position: absolute; top: 30px; left: 0; background: white; color: black; border: 1px solid #ccc; border-radius: 5px; width: 180px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 1000;">
+    <div style="padding: 10px; border-bottom: 1px solid #eee;">
+      <strong>Số dư tài khoản</strong><br/>
+      <span id="userBalanceDropdown">0đ</span>
+      <button style="float: right; background: #f39c12; border: none; border-radius: 50%; width: 24px; height: 24px; color: white; font-weight: bold; cursor: pointer;" onclick="alert('Chức năng nạp tiền đang phát triển')">+</button>
+    </div>
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      <li><a href="quanlytaikhoan.html" style="display: block; padding: 8px 10px; color: black; text-decoration: none;">Quản lý tài khoản</a></li>
+      <li><a href="#" style="display: block; padding: 8px 10px; color: black; text-decoration: none;" onclick="alert('Chức năng lịch sử đơn hàng đang phát triển')">Lịch sử đơn hàng</a></li>
+      <li><a href="#" style="display: block; padding: 8px 10px; color: black; text-decoration: none;" onclick="alert('Chức năng sản phẩm yêu thích đang phát triển')">Sản phẩm yêu thích</a></li>
+      <li><a href="#" style="display: block; padding: 8px 10px; color: black; text-decoration: none;" onclick="logout()">Đăng xuất</a></li>
+    </ul>
+  </div>
 </div>
 <a href="#" id="authLink" onclick="openAuthModal()">Đăng nhập / Đăng ký</a>
   </nav>
@@ -33,19 +45,29 @@
   function updateUserUI(username) {
     document.getElementById('authLink').style.display = 'none';
     document.getElementById('userArea').style.display = 'inline-block';
-    document.getElementById('logoutBtn').style.display = 'inline-block';
+    document.getElementById('userDropdown').style.display = 'none'; // ẩn dropdown lúc đầu
     document.getElementById('userAvatar').textContent = '👤'; // luôn hiển thị icon người que
     // Ví dụ cấp bậc dựa trên username (bạn có thể thay bằng logic thật)
     let rank = 'Hạng Đồng';
     if (username.toLowerCase() === 'admin') rank = 'Hạng Vàng';
     document.getElementById('userBadge').textContent = rank;
+
+    // Lấy số dư tài khoản và hiển thị trong dropdown
+    fetch(`http://localhost:3000/balance/${username}`)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('userBalanceDropdown').textContent = data.balance.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+      })
+      .catch(() => {
+        document.getElementById('userBalanceDropdown').textContent = '0đ';
+      });
   }
 
   // Khi đăng xuất, ẩn nút đăng xuất và khu vực user, hiện lại nút đăng nhập/đăng ký
   function resetUI() {
     document.getElementById('authLink').style.display = 'inline-block';
     document.getElementById('userArea').style.display = 'none';
-    document.getElementById('logoutBtn').style.display = 'none';
+    document.getElementById('userDropdown').style.display = 'none';
   }
 
   // Hàm đăng xuất
@@ -64,8 +86,15 @@
 
   // Hàm mở menu người dùng (bạn có thể thêm menu dropdown)
   function openUserMenu() {
-    alert('Menu người dùng (chưa triển khai)');
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown.style.display === 'block') {
+      dropdown.style.display = 'none';
+    } else {
+      dropdown.style.display = 'block';
+    }
   }
+  // Thêm sự kiện click cho userArea để mở dropdown
+  document.getElementById('userArea').addEventListener('click', openUserMenu);
 
   // Kiểm tra token đăng nhập khi load trang
   window.onload = function() {
@@ -119,6 +148,11 @@
         Nhật Anh vừa mua Acc Roblox #96325 Giá 210,000đ
       </marquee>
     </div>
+    <!-- Hiển thị số dư tài khoản người dùng -->
+<div id="userBalanceContainer" style="position: absolute; top: 12px; left: 50%; transform: translateX(-50%); color: white; font-size: 20px; font-weight: bold; font-family: Arial, sans-serif; background: #222; padding: 5px 15px; border-radius: 25px; box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1000;">
+  <span style="font-size: 22px; margin-right: 8px;">$</span><span id="userBalance">0</span>
+  <button style="margin-left: 10px; background: #f39c12; border: none; border-radius: 50%; width: 28px; height: 28px; color: white; font-weight: bold; cursor: pointer;" onclick="alert('Chức năng nạp tiền đang phát triển')">+</button>
+</div>
   </div>
 
   <!-- BANNER TRUNG TÂM -->
@@ -810,11 +844,7 @@
   </div>
 </section>
 
-<!-- Hiển thị số dư tài khoản người dùng -->
-<div id="userBalanceContainer" style="position: absolute; top: 12px; left: 50%; transform: translateX(-50%); color: white; font-size: 20px; font-weight: bold; font-family: Arial, sans-serif; background: #222; padding: 5px 15px; border-radius: 25px; box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1000;">
-  <span style="font-size: 22px; margin-right: 8px;">$</span><span id="userBalance">0</span>
-  <button style="margin-left: 10px; background: #f39c12; border: none; border-radius: 50%; width: 28px; height: 28px; color: white; font-weight: bold; cursor: pointer;" onclick="alert('Chức năng nạp tiền đang phát triển')">+</button>
-</div>
+
 
 <!-- Phần giới thiệu -->
 <section class="highlight-box">
